@@ -1,4 +1,3 @@
-from exo.inference.mlx.sharded_inference_engine import MLXDynamicShardInferenceEngine
 from exo.download.hf.hf_shard_download import HFShardDownloader
 from exo.inference.inference_engine import InferenceEngine
 from exo.inference.shard import Shard
@@ -42,13 +41,6 @@ async def test_inference_engine(inference_engine_1: InferenceEngine, inference_e
 
   assert np.array_equal(resp_full, resp2)
   assert np.array_equal(next_resp_full, resp4)
-
-
-asyncio.run(test_inference_engine(
-  MLXDynamicShardInferenceEngine(HFShardDownloader()),
-  MLXDynamicShardInferenceEngine(HFShardDownloader()),
-  "mlx-community/Meta-Llama-3-8B-Instruct-4bit",
-))
 
 if os.getenv("RUN_TINYGRAD", default="0") == "1":
   import tinygrad
