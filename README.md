@@ -7,6 +7,9 @@
 
 exo: Run your own AI cluster at home with everyday devices. Maintained by [exo labs](https://x.com/exolabs).
 
+<h1>
+Version tailored for my supercomputer.
+<h1>
 
 <h3>
 
