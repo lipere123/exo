@@ -106,21 +106,6 @@ source install.sh
 
 ## Documentation
 
-### Example Usage on Multiple MacOS Devices
-
-#### Device 1:
-
-```sh
-exo
-```
-
-#### Device 2:
-```sh
-exo
-```
-
-That's it! No configuration required - exo will automatically discover the other device(s).
-
 exo starts a ChatGPT-like WebUI (powered by [tinygrad tinychat](https://github.com/tinygrad/tinygrad/tree/master/examples/tinychat)) on http://localhost:8000
 
 For developers, exo also starts a ChatGPT-compatible API endpoint on http://localhost:8000/v1/chat/completions. Examples with curl:
