@@ -28,7 +28,7 @@ This version is tailored for my supercomputer.
 
 This version (exo:exo-kubelocal) need powerfull nodes to work, 6 minimums on Linux Ubuntu 22.04.
 It is a version specificaly tailored for a supercomputer.
-So no fancy stuff like iOS or Mac with is usefull for mobile application for example.
+So no fancy stuff like iOS or Mac whith is usefull for mobile application for example.
 Here it is more a datacenter version.
 Also a limited number of model are going to be supported and AGI capable of doing action will be implemented.
 All developement will be push/copy on exo:main, but here only datacenter stuff will be keeped.
