@@ -8,7 +8,8 @@
 exo: Run your own AI cluster at home with everyday devices. Maintained by [exo labs](https://x.com/exolabs).
 
 <h1>
-Version tailored for my supercomputer, lipere123.
+Hello people, I am lipere123. </br>
+This version is tailored for my supercomputer.
 <h1>
 
 <h3>
@@ -25,7 +26,12 @@ Version tailored for my supercomputer, lipere123.
 
 ---
 
-Forget expensive NVIDIA GPUs, unify your existing devices into one powerful GPU: iPhone, iPad, Android, Mac, Linux, pretty much any device!
+This version (exo:exo-kubelocal) need powerfull nodes to work, 6 minimums on Linux Ubuntu 22.04.
+It is a version specificaly tailored for a supercomputer.
+So no fancy stuff like iOS or Mac with is usefull for mobile application for example.
+Here it is more a datacenter version.
+Also a limited number of model are going to be supported and AGI capable of doing action will be implemented.
+All developement will be push/copy on exo:main, but here only datacenter stuff will be keeped.
 
 <div align="center">
   <h2>Update: exo is hiring. See <a href="https://exolabs.net">here</a> for more details.</h2>
@@ -41,7 +47,7 @@ We also welcome contributions from the community. We have a list of bounties in 
 
 ### Wide Model Support
 
-exo supports different models including LLaMA ([MLX](exo/inference/mlx/models/llama.py) and [tinygrad](exo/inference/tinygrad/models/llama.py)), Mistral, LlaVA, Qwen and Deepseek.
+exo:exo-kubelocal supports LLaMA ([tinygrad](exo/inference/tinygrad/models/llama.py)).
 
 ### Dynamic Model Partitioning
 
@@ -82,35 +88,21 @@ The current recommended way to install exo is from source.
 
 ### Hardware Requirements
 
-- The only requirement to run exo is to have enough memory across all your devices to fit the entire model into memory. For example, if you are running llama 3.1 8B (fp16), you need 16GB of memory across all devices. Any of the following configurations would work since they each have more than 16GB of memory in total:
-  - 2 x 8GB M3 MacBook Airs
-  - 1 x 16GB NVIDIA RTX 4070 Ti Laptop
-  - 2 x Raspberry Pi 400 with 4GB of RAM each (running on CPU) + 1 x 8GB Mac Mini
-- exo is designed to run on devices with heterogeneous capabilities. For example, you can have some devices with powerful GPUs and others with integrated GPUs or even CPUs. Adding less capable devices will slow down individual inference latency but will increase the overall throughput of the cluster.
+- Normally for exo:main, the only requirement to run exo is to have enough memory across all your devices to fit the entire model into memory. For example, if you are running llama 3.1 8B (fp16), you need 16GB of memory across all devices.
+Now for running this version:
+  - 6 x NVIDIA RTX 4000 ADA GENERATION or more powerfull, same card on each node
+  - 128Go RAM on each node
 
 ### From source
 
-
 ```sh
-git clone https://github.com/exo-explore/exo.git
+git clone https://github.com/lipere123/exo.git
 cd exo
+git checkout exo-kubelocal
 pip install -e .
 # alternatively, with venv
 source install.sh
 ```
-
-
-### Troubleshooting
-
-- If running on Mac, MLX has an [install guide](https://ml-explore.github.io/mlx/build/html/install.html) with troubleshooting steps.
-
-### Performance
-
-- There are a number of things users have empirically found to improve performance on Apple Silicon Macs:
-
-1. Upgrade to the latest version of MacOS 15.
-2. Run `./configure_mlx.sh`. This runs commands to optimize GPU memory allocation on Apple Silicon Macs.
-
 
 ## Documentation
 
@@ -185,36 +177,26 @@ curl http://localhost:8000/v1/chat/completions \
    }'
 ```
 
-### Example Usage on Multiple Heterogenous Devices (MacOS + Linux)
+### Example Usage Linux only
 
-#### Device 1 (MacOS):
+You need to explicitly tell exo to use the **tinygrad** inference engine.
+
+#### Device 1 (Linux):
 
 ```sh
 exo --inference-engine tinygrad
 ```
 
-Here we explicitly tell exo to use the **tinygrad** inference engine.
-
 #### Device 2 (Linux):
+
 ```sh
-exo
+exo --inference-engine tinygrad
 ```
 
 Linux devices will automatically default to using the **tinygrad** inference engine.
 
-You can read about tinygrad-specific env vars [here](https://docs.tinygrad.org/env_vars/). For example, you can configure tinygrad to use the cpu by specifying `CLANG=1`.
-
-### Example Usage on a single device with "exo run" command
-
-```sh
-exo run llama-3.2-3b
-```
-
-With a custom prompt:
-
-```sh
-exo run llama-3.2-3b --prompt "What is the meaning of exo?"
-```
+You can read about tinygrad-specific env vars [here](https://docs.tinygrad.org/env_vars/). 
+You also need to launch with CUDA=1 DEBUG=9 for this version exo:exo-kubelocal
 
 ## Debugging
 
@@ -230,27 +212,13 @@ For the **tinygrad** inference engine specifically, there is a separate DEBUG fl
 TINYGRAD_DEBUG=2 exo
 ```
 
-## Known Issues
-
-- On some versions of MacOS/Python, certificates are not installed properly which can lead to SSL errors (e.g. SSL error with huggingface.co). To fix this, run the Install Certificates command, usually:
-
-```sh
-/Applications/Python 3.x/Install Certificates.command
-```
-
-- 🚧 As the library is evolving so quickly, the iOS implementation has fallen behind Python. We have decided for now not to put out the buggy iOS version and receive a bunch of GitHub issues for outdated code. We are working on solving this properly and will make an announcement when it's ready. If you would like access to the iOS implementation now, please email alex@exolabs.net with your GitHub username explaining your use-case and you will be granted access on GitHub.
-
 ## Inference Engines
 
 exo supports the following inference engines:
 
-- ✅ [MLX](exo/inference/mlx/sharded_inference_engine.py)
 - ✅ [tinygrad](exo/inference/tinygrad/inference.py)
 - 🚧 [PyTorch](https://github.com/exo-explore/exo/pull/139)
-- 🚧 [llama.cpp](https://github.com/exo-explore/exo/issues/167)
 
 ## Networking Modules
 
 - ✅ [GRPC](exo/networking/grpc)
-- 🚧 [Radio](TODO)
-- 🚧 [Bluetooth](TODO)
