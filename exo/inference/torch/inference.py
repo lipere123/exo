@@ -2,11 +2,13 @@
 import asyncio
 import os
 import re
-import numpy as np
-import torch
 import json
 import functools
 from concurrent.futures import ThreadPoolExecutor
+
+import numpy as np
+
+import torch
 
 from typing import Optional, Tuple, Union, List
 from exo.inference.shard import Shard
@@ -50,22 +52,18 @@ class TorchDynamicShardInferenceEngine(InferenceEngine):
 
     # setup cuda device
     if os.environ.get("TORCH_DEVICE"):
-      torch_device = os.environ["PYTOCH_DEVICE"]
-      if torch_device not in ["cuda", "mps"]:
-        torch_device = "cpu"
-
-      self.device = torch_device
-      self.torch_dtype = torch.float16 if torch_device != "cpu" else torch.float32
-
-    if torch.cuda.is_available():
+      self.device = torch.device(os.environ["TORCH_DEVICE"])
+    elif torch.cuda.is_available():
       self.device = torch.device("cuda")
-      self.torch_dtype = torch.float32
     elif torch.backends.mps.is_available() and torch.backends.mps.is_built():
       self.device = torch.device("mps")
-      self.torch_dtype = torch.float32
     else:
       self.device = torch.device("cpu")
-      self.torch_dtype = torch.float16
+
+    torch.set_default_device(self.device)
+
+    # setup cude dtype
+    self.torch_dtype = torch.float32 if self.device != torch.device('cpu') else torch.float16
 
     # setup threadding
     torch.set_num_threads(torch.get_num_threads())
@@ -116,7 +114,7 @@ class TorchDynamicShardInferenceEngine(InferenceEngine):
     )
 
     with ThreadPoolExecutor() as pool:
-        result = await loop.run_in_executor(pool, forward_partial)
+      result = await loop.run_in_executor(pool, forward_partial)
 
     return result
 
